@@ -1,0 +1,61 @@
+body {
+    background: url('/css/images/igreja.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.container, .login-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+.btn-primary {
+    background-color: #795548;
+    border-color: #795548;
+}
+
+.btn-primary:hover {
+    background-color: #6d4c41;
+    border-color: #6d4c41;
+}
+
+.btn-success {
+    background-color: #8d6e63;
+    border-color: #8d6e63;
+}
+
+.btn-success:hover {
+    background-color: #7d5649;
+    border-color: #7d5649;
+}
+
+.btn-secondary {
+    background-color: #a1887f;
+    border-color: #a1887f;
+}
+
+.btn-secondary:hover {
+    background-color: #8d6e63;
+    border-color: #8d6e63;
+}
+
+.modal-header {
+    background-color: #795548;
+    color: #ffffff;
+}
+
+.login-container {
+    max-width: 400px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 50px auto;
+}
+
+.action-btn {
+    width: 100%;
+    margin-bottom: 5px;
+}

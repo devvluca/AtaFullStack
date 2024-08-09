@@ -15,13 +15,16 @@
             <h1>Ata EBD - <%= ebd %></h1>
             <a href="/logout" class="btn btn-secondary">Sair</a>
         </div>
-        <form action="/add" method="POST" class="form-inline mb-4">
-            <input type="text" name="name" class="form-control mr-2" placeholder="Nome" required>
-            <input type="number" name="age" class="form-control mr-2" placeholder="Idade" required>
-            <input type="text" name="conecta" class="form-control mr-2" placeholder="Conecta" required>
-            <input type="text" name="phone" class="form-control mr-2" placeholder="Telefone" required>
-            <button type="submit" class="btn btn-primary">Adicionar</button>
-        </form>
+        <div class="d-flex mb-4">
+            <form action="/add" method="POST" class="form-inline mr-2">
+                <input type="text" name="name" class="form-control mr-2" placeholder="Nome" required>
+                <input type="number" name="age" class="form-control mr-2" placeholder="Idade" required>
+                <input type="text" name="conecta" class="form-control mr-2" placeholder="Conecta" required>
+                <input type="text" name="phone" class="form-control mr-2" placeholder="Telefone" required>
+                <button type="submit" class="btn btn-primary">Adicionar</button>
+            </form>
+            <a href="/review" class="btn btn-info">Review</a>
+        </div>
         <table class="table table-bordered">
             <thead class="thead-dark">
                 <tr>

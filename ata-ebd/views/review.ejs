@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review - <%= ebd %></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mt-5">Review - <%= ebd %></h1>
+            <a href="/" class="btn btn-primary">Voltar</a>
+        </div>
+        <div class="card p-3">
+            <div class="data-section">
+                <p><span class="highlight">Participantes presentes este mês:</span> <%= monthAttendance %></p>
+                <p><span class="highlight">Participantes presentes este ano:</span> <%= yearAttendance %></p>
+                <p><span class="highlight">Total de participantes:</span> <%= totalAttendees %></p>
+                <p><span class="highlight">Participante com mais presenças:</span> <%= topAttendee.name %> (<%= topAttendee.presencas %> presenças)</p>
+            </div>
+            <h3 class="highlight">Participantes sem Conecta:</h3>
+            <ul class="participant-list">
+                <% noConecta.forEach(function(participant) { %>
+                    <li><%= participant.name %></li>
+                <% }); %>
+            </ul>
+        </div>
+        <div class="card p-3 mt-4 chart-container">
+            <h3 class="card-title">Gráfico de Presenças</h3>
+            <canvas id="attendanceChart"></canvas>
+        </div>
+        <div class="card p-3 mt-4 chart-container">
+            <h3 class="card-title">Gráfico de Participantes</h3>
+            <canvas id="participantsChart"></canvas>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const attendanceData = {
+                labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                datasets: [{
+                    label: 'Presenças Mensais',
+                    data: [3, 5, 8, 6, 4, 7, 2, 3, 9, 10, 8, 6], // Ajuste os dados reais conforme necessário
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            const participantsData = {
+                labels: ['Juventude', 'Recon Manhã', 'Recon Tarde'],
+                datasets: [{
+                    label: 'Participantes',
+                    data: [<%= totalAttendees %>, 25, 20], // Ajuste os dados reais conforme necessário
+                    backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
+                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
+                    borderWidth: 1
+                }]
+            };
+
+            const ctx1 = document.getElementById('attendanceChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: attendanceData,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            const ctx2 = document.getElementById('participantsChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'pie',
+                data: participantsData,
+                options: {
+                    responsive: true
+                }
+            });
+        });
+    </script>
+</body>
+</html>

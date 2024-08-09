@@ -8,6 +8,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views')); // Certifique-se de que a pasta 'views' está configurada corretamente
+
 app.use(session({
     secret: 'mysecret',
     resave: false,
@@ -82,62 +84,48 @@ app.get('/', checkAuth, (req, res) => {
     });
 });
 
-app.post('/add', checkAuth, (req, res) => {
-    const { name, age, conecta, phone } = req.body;
+// Adicione esta rota para a página de review
+app.get('/review', checkAuth, (req, res) => { // Altere o caminho conforme necessário
     const db = new sqlite3.Database(req.session.user.dbPath);
-    db.run("INSERT INTO attendees (name, age, conecta, phone, presencas) VALUES (?, ?, ?, ?, 0)", [name, age, conecta, phone], (err) => {
-        if (err) throw err;
-        res.redirect('/');
-    });
-});
+    const currentMonth = new Date().getMonth() + 1; // Janeiro é 0
+    const currentYear = new Date().getFullYear();
 
-app.post('/update', checkAuth, (req, res) => {
-    const { id, name, age, conecta, phone } = req.body;
-    const db = new sqlite3.Database(req.session.user.dbPath);
-    db.run("UPDATE attendees SET name = ?, age = ?, conecta = ?, phone = ? WHERE id = ?", [name, age, conecta, phone, id], (err) => {
-        if (err) throw err;
-        res.redirect('/');
-    });
-});
+    // Query para obter os dados
+    const queries = {
+        monthAttendance: "SELECT COUNT(DISTINCT attendee_id) AS count FROM presences WHERE strftime('%m', date) = ?",
+        yearAttendance: "SELECT COUNT(DISTINCT attendee_id) AS count FROM presences WHERE strftime('%Y', date) = ?",
+        totalAttendees: "SELECT COUNT(*) AS count FROM attendees",
+        topAttendees: "SELECT name, presencas FROM attendees ORDER BY presencas DESC LIMIT 1",
+        noConecta: "SELECT name FROM attendees WHERE conecta = 'Nenhum'"
+    };
 
-app.post('/add-presenca', checkAuth, (req, res) => {
-    const { id, date } = req.body;
-    const db = new sqlite3.Database(req.session.user.dbPath);
-    db.run("UPDATE attendees SET presencas = presencas + 1 WHERE id = ?", [id], (err) => {
-        if (err) throw err;
-        db.run("INSERT INTO presences (attendee_id, date) VALUES (?, ?)", [id, date], (err) => {
+    const monthParam = currentMonth.toString().padStart(2, '0');
+    const yearParam = currentYear.toString();
+
+    db.serialize(() => {
+        db.get(queries.monthAttendance, [monthParam], (err, monthRow) => {
             if (err) throw err;
-            res.redirect('/');
-        });
-    });
-});
-
-app.post('/remove-presenca', checkAuth, (req, res) => {
-    const { id } = req.body;
-    const db = new sqlite3.Database(req.session.user.dbPath);
-    db.get("SELECT date FROM presences WHERE attendee_id = ? ORDER BY date DESC LIMIT 1", [id], (err, row) => {
-        if (err) throw err;
-        if (row) {
-            const date = row.date;
-            db.run("DELETE FROM presences WHERE attendee_id = ? AND date = ?", [id, date], (err) => {
+            db.get(queries.yearAttendance, [yearParam], (err, yearRow) => {
                 if (err) throw err;
-                db.run("UPDATE attendees SET presencas = presencas - 1 WHERE id = ?", [id], (err) => {
+                db.get(queries.totalAttendees, (err, totalRow) => {
                     if (err) throw err;
-                    res.redirect('/');
+                    db.get(queries.topAttendees, (err, topRow) => {
+                        if (err) throw err;
+                        db.all(queries.noConecta, (err, noConectaRows) => {
+                            if (err) throw err;
+                            res.render('review', {
+                                monthAttendance: monthRow.count,
+                                yearAttendance: yearRow.count,
+                                totalAttendees: totalRow.count,
+                                topAttendee: topRow,
+                                noConecta: noConectaRows,
+                                ebd: req.session.user.ebdName
+                            });
+                        });
+                    });
                 });
             });
-        } else {
-            res.redirect('/');
-        }
-    });
-});
-
-app.get('/presences/:id', checkAuth, (req, res) => {
-    const { id } = req.params;
-    const db = new sqlite3.Database(req.session.user.dbPath);
-    db.all("SELECT date FROM presences WHERE attendee_id = ?", [id], (err, rows) => {
-        if (err) throw err;
-        res.render('presences', { presences: rows });
+        });
     });
 });
 
@@ -226,4 +214,11 @@ app.post('/remove-presenca', checkAuth, (req, res) => {
     });
 });
 
-
+app.get('/presences/:id', checkAuth, (req, res) => {
+    const { id } = req.params;
+    const db = new sqlite3.Database(req.session.user.dbPath);
+    db.all("SELECT date FROM presences WHERE attendee_id = ?", [id], (err, rows) => {
+        if (err) throw err;
+        res.render('presences', { presences: rows });
+    });
+});

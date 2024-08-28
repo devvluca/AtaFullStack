@@ -21,10 +21,11 @@
                     <tbody>
                         <% presences.forEach(presence => { %>
                             <tr>
-                                <td class="text-center"><%= presence.date %></td>
+                                <td class="text-center"><%= new Date(presence.date).toLocaleDateString('pt-BR') %></td>
                             </tr>
                         <% }); %>
                     </tbody>
+                    
                 </table>
             </div>
         </div>

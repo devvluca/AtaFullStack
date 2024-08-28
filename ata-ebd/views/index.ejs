@@ -53,9 +53,10 @@
                             </form>
                             <form action="/add-presenca" method="POST" class="mt-2 add-presenca-form">
                                 <input type="hidden" name="id" value="<%= attendee.id %>">
-                                <input type="text" name="date" class="form-control datepicker" placeholder="Data">
+                                <input type="text" name="date" class="form-control datepicker" placeholder="Data" required>
                                 <button type="submit" class="btn btn-success action-btn">Adicionar Presença</button>
                             </form>
+                            
                             <form action="/remove-presenca" method="POST" class="mt-2">
                                 <input type="hidden" name="id" value="<%= attendee.id %>">
                                 <button type="submit" class="btn btn-danger action-btn">Remover Presença</button>

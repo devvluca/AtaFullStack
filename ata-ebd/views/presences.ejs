@@ -5,25 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Histórico de Presenças</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Histórico de Presenças</h1>
-        <table class="table table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Data</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% presences.forEach(presence => { %>
-                    <tr>
-                        <td><%= presence.date %></td>
-                    </tr>
-                <% }); %>
-            </tbody>
-        </table>
-        <a href="/" class="btn btn-primary">Voltar</a>
+        <h1 class="text-center">Histórico de Presenças</h1>
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% presences.forEach(presence => { %>
+                            <tr>
+                                <td class="text-center"><%= presence.date %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-primary">Voltar</a>
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

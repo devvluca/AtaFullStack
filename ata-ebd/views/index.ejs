@@ -7,26 +7,35 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/locales/bootstrap-datepicker.pt-BR.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker3.min.css">
 </head>
 <body>
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Ata EBD - <%= ebd %></h1>
-            <a href="/logout" class="btn btn-secondary">Sair</a>
-        </div>
-        <div class="d-flex mb-4">
-            <form action="/add" method="POST" class="form-inline mr-2">
-                <input type="text" name="name" class="form-control mr-2" placeholder="Nome" required>
-                <input type="number" name="age" class="form-control mr-2" placeholder="Idade" required>
-                <input type="text" name="conecta" class="form-control mr-2" placeholder="Conecta" required>
-                <input type="text" name="phone" class="form-control mr-2" placeholder="Telefone" required>
-                <button type="submit" class="btn btn-primary">Adicionar</button>
-            </form>
-            <a href="/review" class="btn btn-info">Review</a>
-        </div>
+        <h1 class="mt-4">Ata EBD - <%= ebd %></h1>
+        <a href="/review" class="btn btn-info">Review</a>
+        <form action="/add" method="POST" class="mt-4">
+            <div class="form-group">
+                <label for="name">Nome:</label>
+                <input type="text" name="name" id="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Idade:</label>
+                <input type="number" name="age" id="age" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="conecta">Conecta:</label>
+                <input type="text" name="conecta" id="conecta" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Telefone:</label>
+                <input type="text" name="phone" id="phone" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Adicionar</button>
+        </form>
+
+        <h2 class="mt-4">Participantes</h2>
         <table class="table table-bordered">
-            <thead class="thead-dark">
+            <thead>
                 <tr>
                     <th>Nome</th>
                     <th>Idade</th>
@@ -39,45 +48,40 @@
             <tbody>
                 <% attendees.forEach(attendee => { %>
                     <tr>
+                        <td><%= attendee.name %></td>
+                        <td><%= attendee.age %></td>
+                        <td><%= attendee.conecta %></td>
+                        <td><%= attendee.phone %></td>
+                        <td><%= attendee.presencas %></td>
                         <td>
-                            <form action="/update" method="POST" class="form-inline">
-                                <input type="hidden" name="id" value="<%= attendee.id %>">
-                                <input type="text" name="name" class="form-control" value="<%= attendee.name %>">
-                        </td>
-                        <td><input type="number" name="age" class="form-control" value="<%= attendee.age %>"></td>
-                        <td><input type="text" name="conecta" class="form-control" value="<%= attendee.conecta %>"></td>
-                        <td><input type="text" name="phone" class="form-control" value="<%= attendee.phone %>"></td>
-                        <td><a href="/presences/<%= attendee.id %>"><%= attendee.presencas %></a></td>
-                        <td>
-                                <button type="submit" class="btn btn-secondary action-btn">Salvar</button>
+                            <form action="/add-presenca" method="POST" class="d-inline">
+                                <input type="hidden" name="id" value="<%= attendee._id %>">
+                                <input type="hidden" name="date" class="date-input">
+                                <button type="submit" class="btn btn-success">Adicionar Presença</button>
                             </form>
-                            <form action="/add-presenca" method="POST" class="mt-2 add-presenca-form">
-                                <input type="hidden" name="id" value="<%= attendee.id %>">
-                                <input type="text" name="date" class="form-control datepicker" placeholder="Data" required>
-                                <button type="submit" class="btn btn-success action-btn">Adicionar Presença</button>
+                            <form action="/remove-presenca" method="POST" class="d-inline">
+                                <input type="hidden" name="id" value="<%= attendee._id %>">
+                                <button type="submit" class="btn btn-danger">Remover Presença</button>
                             </form>
-                            
-                            <form action="/remove-presenca" method="POST" class="mt-2">
-                                <input type="hidden" name="id" value="<%= attendee.id %>">
-                                <button type="submit" class="btn btn-danger action-btn">Remover Presença</button>
+                            <form action="/update" method="POST" class="d-inline">
+                                <input type="hidden" name="id" value="<%= attendee._id %>">
+                                <button type="submit" class="btn btn-warning">Editar</button>
                             </form>
                         </td>
                     </tr>
-                <% }); %>
+                <% }) %>
             </tbody>
         </table>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/locales/bootstrap-datepicker.pt-BR.min.js"></script>
     <script>
-        $(document).ready(function(){
-            $('.datepicker').datepicker({
+        $(document).ready(function () {
+            $('.date-input').datepicker({
                 format: 'yyyy-mm-dd',
-                language: 'pt-BR'
-            });
+                autoclose: true,
+            }).datepicker('setDate', new Date());
         });
     </script>
 </body>

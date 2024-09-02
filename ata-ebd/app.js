@@ -3,7 +3,7 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const path = require('path');
-require('dotenv').config();
+require('/Users/lucan/Documents/GitHub/AtaFullStack/ata-ebd/.env').config();
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));

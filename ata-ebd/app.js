@@ -3,7 +3,7 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const path = require('path');
-require('dotenv').config(); // Correção aqui
+require('dotenv').config(); // Certifique-se de usar dotenv para gerenciar variáveis de ambiente
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -17,6 +17,7 @@ mongoose.connect(process.env.MONGODB_URI, {
     useUnifiedTopology: true,
 });
 
+// Defina os esquemas
 const attendeeSchema = new mongoose.Schema({
     name: String,
     age: Number,
@@ -35,12 +36,13 @@ const userSchema = new mongoose.Schema({
     password: String,
 });
 
+// Crie os modelos
 const Attendee = mongoose.model('Attendee', attendeeSchema);
 const Presence = mongoose.model('Presence', presenceSchema);
 const User = mongoose.model('User', userSchema);
 
 app.use(session({
-    secret: 'mysecret',
+    secret: 'mysecret', // Troque isso para um segredo mais seguro em produção
     resave: false,
     saveUninitialized: true,
 }));
@@ -131,13 +133,14 @@ app.post('/remove-presenca', checkAuth, async (req, res) => {
     res.redirect('/');
 });
 
+// Rota para visualizar presenças
 app.get('/presences/:id', checkAuth, async (req, res) => {
     const { id } = req.params;
     const presences = await Presence.find({ attendee_id: id });
     res.render('presences', { presences });
 });
 
-// Adicione esta rota para a página de review
+// Rota para a página de revisão
 app.get('/review', checkAuth, async (req, res) => {
     const currentMonth = new Date().getMonth() + 1; // Janeiro é 0
     const currentYear = new Date().getFullYear();
@@ -169,6 +172,7 @@ app.get('/review', checkAuth, async (req, res) => {
     });
 });
 
+// Inicie o servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
